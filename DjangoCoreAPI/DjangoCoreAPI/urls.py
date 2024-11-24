@@ -22,6 +22,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth/', include('users.urls')),  # Include your app's urls here
+    path('api/questions/', include('questions.urls')),
     
     # SimpleJWT Token URLs
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
