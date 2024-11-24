@@ -7,9 +7,17 @@ class Question(models.Model):
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    liked_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='liked_questions', blank=True)
+    disliked_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='disliked_questions', blank=True)
+
+    def like_count(self):
+        return self.liked_users.count()
+
+    def dislike_count(self):
+        return self.disliked_users.count()
 
     def __str__(self):
-        return self.title
+        return f"{self.user.first_name} {self.user.last_name} - {self.title}"
 
 
 class Comment(models.Model):
@@ -18,8 +26,14 @@ class Comment(models.Model):
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    like = models.IntegerField(default=0)
-    dislike = models.IntegerField(default=0)
+    liked_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='liked_comments', blank=True)
+    disliked_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='disliked_comments', blank=True)
+
+    def like_count(self):
+        return self.liked_users.count()
+
+    def dislike_count(self):
+        return self.disliked_users.count()
 
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name} - {self.question.title}'
