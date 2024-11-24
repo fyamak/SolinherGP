@@ -22,7 +22,7 @@ class CustomUser(AbstractUser):
     role = models.CharField(max_length=15, choices=ROLE_CHOICES, default='user')
     # profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
     profile_picture = models.CharField(max_length=155,null=True, blank=True) # Pillow lib is necessary
-    is_account_verified = models.BooleanField(default=False)  
+    is_account_verified = models.BooleanField(default=False)
     questions_asked = models.IntegerField(default=0)  
     answers_given = models.IntegerField(default=0)
     receive_email_notifications = models.BooleanField(default=False)

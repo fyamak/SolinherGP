@@ -4,9 +4,14 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.generics import get_object_or_404
 from users.serializers import CustomUserSerializer, UpdateUserSerializer, RegisterSerializer, LoginSerializer, ChangePasswordSerializer
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+
+
+CustomUser = get_user_model()
+
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
@@ -106,3 +111,11 @@ class DeleteUserView(APIView):
         user.delete()
         return Response({"message": "User account deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
+
+class GetUserByIdView(APIView):
+    permission_classes = [AllowAny]
+    
+    def get(self, request, pk):
+        user = CustomUser.objects.get(pk=pk)
+        serializer = CustomUserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
