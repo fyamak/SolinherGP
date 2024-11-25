@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from questions.models import Question, Comment
-from questions.serializers import QuestionSerializer, QuestionCreateSerializer, CommentCreateSerializer
+from questions.serializers import QuestionSerializer, CommentSerializer
 from drf_yasg.utils import swagger_auto_schema
 
 
@@ -12,11 +12,11 @@ class CreateQuestion(APIView):
     permission_classes = [IsAuthenticated]
     
     @swagger_auto_schema(
-        request_body=QuestionCreateSerializer,
+        request_body=QuestionSerializer,
         responses={200: 'Question successfully created', 400: 'Question not created'}
     )
     def post(self, request):
-        serializer = QuestionCreateSerializer(data=request.data)
+        serializer = QuestionSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user = request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -27,14 +27,14 @@ class CreateComment(APIView):
     permission_classes = [IsAuthenticated]
     
     @swagger_auto_schema(
-        request_body=CommentCreateSerializer,
+        request_body=CommentSerializer,
         responses={
             200: "Comment successfully created",
             400: "Comment not created",
         }
     )
     def post(self, request):
-        serializer = CommentCreateSerializer(data=request.data)
+        serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user = request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -50,9 +50,9 @@ class ListQuestionView(APIView):
     def get(self, request):
         questions = Question.objects.all()
         serializer = QuestionSerializer(questions, many=True)
-        if serializer.is_valid():
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        # if serializer.is_valid():
+        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         
     
