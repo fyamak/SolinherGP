@@ -8,7 +8,7 @@ from questions.serializers import QuestionSerializer, CommentSerializer
 from drf_yasg.utils import swagger_auto_schema
 
 
-class AllQuestionView(APIView):
+class AllQuestions(APIView):
     permission_classes = [AllowAny]
     
     @swagger_auto_schema(
@@ -65,7 +65,7 @@ class OwnQuestions(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
       
     
-class LikeQuestionView(APIView):
+class LikeQuestion(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
@@ -82,7 +82,7 @@ class LikeQuestionView(APIView):
             return Response({"message": "Liked successfully"}, status=status.HTTP_200_OK)
         
 
-class DislikeQuestionView(APIView):
+class DislikeQuestion(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
@@ -99,7 +99,7 @@ class DislikeQuestionView(APIView):
             return Response({"message": "Disliked successfully"}, status=status.HTTP_200_OK)
         
 
-class LikeCommentView(APIView):
+class LikeComment(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
@@ -116,7 +116,7 @@ class LikeCommentView(APIView):
             return Response({"message": "Liked successfully"}, status=status.HTTP_200_OK)
         
 
-class DislikeCommentView(APIView):
+class DislikeComment(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
@@ -133,7 +133,7 @@ class DislikeCommentView(APIView):
             return Response({"message": "Disliked successfully"}, status=status.HTTP_200_OK)
 
 
-class FavoriteQuestionView(APIView):
+class FavoriteQuestion(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):

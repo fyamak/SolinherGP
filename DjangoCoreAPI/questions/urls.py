@@ -1,19 +1,19 @@
 from django.urls import path
 from questions.views import (
-    AllQuestionView, CreateQuestion, CreateComment, OwnQuestions,
-    LikeQuestionView, DislikeQuestionView, LikeCommentView, DislikeCommentView,
-    FavoriteQuestionView,
+    AllQuestions, CreateQuestion, CreateComment, OwnQuestions,
+    LikeQuestion, DislikeQuestion, LikeComment, DislikeComment,
+    FavoriteQuestion,
 )
 
 # try these urls - they have never been tried 
 urlpatterns = [
-    path("all-questions/", AllQuestionView.as_view(), name="All_question"),
+    path("all-questions/", AllQuestions.as_view(), name="All_question"),
     path("create-question/",CreateQuestion.as_view(),name="create_question"),
     path("create-comment/",CreateComment.as_view(),name="create_comment"),
     path("own-questions/",OwnQuestions.as_view(),name="own_questions"),
-    path("like-question/<int:pk>", LikeQuestionView.as_view(), name="like_question"),
-    path("dislike-question/<int:pk>", DislikeQuestionView.as_view(), name="dislike_question"),
-    path("like-comment/<int:pk>", LikeCommentView.as_view(), name="like_comment"),
-    path("dislike-comment/<int:pk>", DislikeCommentView.as_view(), name="dislike_comment"),
-    path("favorite-question/<int:pk>", FavoriteQuestionView.as_view(), name="favorite_question"),
+    path("like-question/<int:pk>", LikeQuestion.as_view(), name="like_question"),
+    path("dislike-question/<int:pk>", DislikeQuestion.as_view(), name="dislike_question"),
+    path("like-comment/<int:pk>", LikeComment.as_view(), name="like_comment"),
+    path("dislike-comment/<int:pk>", DislikeComment.as_view(), name="dislike_comment"),
+    path("favorite-question/<int:pk>", FavoriteQuestion.as_view(), name="favorite_question"),
 ]
