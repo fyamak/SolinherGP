@@ -63,7 +63,19 @@ class OwnQuestions(APIView):
         own_questions = Question.objects.filter(user=request.user)
         serializer = QuestionSerializer(own_questions, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-      
+
+
+class QuestionByID(APIView):
+    permission_classes = [AllowAny]
+    
+    @swagger_auto_schema(
+        responses={200: QuestionSerializer()}
+    )
+    def get(self,request, pk):
+        question = get_object_or_404(Question, pk=pk)
+        serializer = QuestionSerializer(question)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     
 class LikeQuestion(APIView):
     permission_classes = [IsAuthenticated]

@@ -1,6 +1,6 @@
 from django.urls import path
 from questions.views import (
-    AllQuestions, CreateQuestion, CreateComment, OwnQuestions,
+    AllQuestions, CreateQuestion, CreateComment, OwnQuestions, QuestionByID,
     LikeQuestion, DislikeQuestion, LikeComment, DislikeComment,
     FavoriteQuestion,
 )
@@ -11,6 +11,7 @@ urlpatterns = [
     path("create-question/",CreateQuestion.as_view(),name="create_question"),
     path("create-comment/",CreateComment.as_view(),name="create_comment"),
     path("own-questions/",OwnQuestions.as_view(),name="own_questions"),
+    path("question/<int:pk>", QuestionByID.as_view(), name="question"),
     path("like-question/<int:pk>", LikeQuestion.as_view(), name="like_question"),
     path("dislike-question/<int:pk>", DislikeQuestion.as_view(), name="dislike_question"),
     path("like-comment/<int:pk>", LikeComment.as_view(), name="like_comment"),
