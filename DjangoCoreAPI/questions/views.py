@@ -65,6 +65,50 @@ class OwnQuestions(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class EditQuestion(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    swagger_auto_schema(
+        request_body=QuestionSerializer,
+        responses={200: QuestionSerializer()}
+    )
+    def patch(self, request, pk):
+        question = get_object_or_404(Question,pk=pk)
+        
+        if question.user != request.user:
+            return Response({"error": "You are not allowed to edit this question."}, status=status.HTTP_403_FORBIDDEN)
+
+        serializer = QuestionSerializer(question, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EditComment(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    @swagger_auto_schema(
+        request_body=CommentSerializer,
+        responses={200: CommentSerializer()}
+    )
+    def patch(self, request, pk):
+        comment = get_object_or_404(Comment, pk=pk)
+    
+        if comment.user != request.user:
+            return Response({"error": "You are not allowed to edit this question."}, status=status.HTTP_403_FORBIDDEN)
+        
+        request_data = request.data.copy()
+        if 'question' in request_data: # block to change question
+            request_data.pop('question')
+            
+        serializer = CommentSerializer(comment, data=request_data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
 class QuestionByID(APIView):
     permission_classes = [AllowAny]
     
