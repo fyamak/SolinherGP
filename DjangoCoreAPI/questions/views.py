@@ -8,7 +8,7 @@ from questions.serializers import QuestionSerializer, CommentSerializer
 from drf_yasg.utils import swagger_auto_schema
 
 
-class ListQuestionView(APIView):
+class AllQuestionView(APIView):
     permission_classes = [AllowAny]
     
     @swagger_auto_schema(

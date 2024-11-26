@@ -1,13 +1,13 @@
 from django.urls import path
 from questions.views import (
-    ListQuestionView, CreateQuestion, CreateComment, OwnQuestions,
+    AllQuestionView, CreateQuestion, CreateComment, OwnQuestions,
     LikeQuestionView, DislikeQuestionView, LikeCommentView, DislikeCommentView,
     FavoriteQuestionView,
 )
 
 # try these urls - they have never been tried 
 urlpatterns = [
-    path("list-questions/", ListQuestionView.as_view(), name="list_question"),
+    path("all-questions/", AllQuestionView.as_view(), name="All_question"),
     path("create-question/",CreateQuestion.as_view(),name="create_question"),
     path("create-comment/",CreateComment.as_view(),name="create_comment"),
     path("own-questions/",OwnQuestions.as_view(),name="own_questions"),
