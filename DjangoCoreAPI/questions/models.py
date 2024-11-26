@@ -18,7 +18,8 @@ class Question(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     liked_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='liked_questions', blank=True)
     disliked_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='disliked_questions', blank=True)
-
+    favorited_by = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='favorite_questions', blank=True)
+    
     def like_count(self):
         return self.liked_users.count()
 

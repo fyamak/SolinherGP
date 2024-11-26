@@ -8,6 +8,18 @@ from questions.serializers import QuestionSerializer, CommentSerializer
 from drf_yasg.utils import swagger_auto_schema
 
 
+class ListQuestionView(APIView):
+    permission_classes = [AllowAny]
+    
+    @swagger_auto_schema(
+        responses={200: QuestionSerializer()}
+    )
+    def get(self, request):
+        questions = Question.objects.all()
+        serializer = QuestionSerializer(questions, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    
 class CreateQuestion(APIView):
     permission_classes = [IsAuthenticated]
     
@@ -39,23 +51,7 @@ class CreateComment(APIView):
             serializer.save(user = request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)        
-
-
-class ListQuestionView(APIView):
-    permission_classes = [AllowAny]
-    
-    @swagger_auto_schema(
-        responses={200: QuestionSerializer()}
-    )
-    def get(self, request):
-        questions = Question.objects.all()
-        serializer = QuestionSerializer(questions, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-        # if serializer.is_valid():
-        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        
-    
+            
     
 class LikeQuestionView(APIView):
     permission_classes = [IsAuthenticated]
@@ -123,3 +119,16 @@ class DislikeCommentView(APIView):
         else:
             comment.disliked_users.add(request.user)  # Add dislike
             return Response({"message": "Disliked successfully"}, status=status.HTTP_200_OK)
+
+
+class FavoriteQuestionView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        question = get_object_or_404(Question, pk=pk)
+        if request.user in question.favorited_by.all():
+            question.favorited_by.remove(request.user)
+            return Response({"message": "Removed from favorites"}, status=status.HTTP_200_OK)
+        else:
+            question.favorited_by.add(request.user)
+            return Response({"message": "Added to favorites"}, status=status.HTTP_200_OK)

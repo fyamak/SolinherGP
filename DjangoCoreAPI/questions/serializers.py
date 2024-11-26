@@ -21,7 +21,7 @@ class CommentSerializer(serializers.ModelSerializer):
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ["id", "name"]  # Etiketlerle ilgili alanlar
+        fields = ["id", "name"]
         
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -33,8 +33,8 @@ class QuestionSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Question
-        fields = ["id","user","title","body","tags","tag_names","created_at","updated_at","like_count","dislike_count","comments"]
-        read_only_fields = ['user','created_at', 'updated_at', 'liked_users', 'disliked_users']
+        fields = ["id","user","title","body","tags","tag_names","favorited_by","created_at","updated_at","like_count","dislike_count","comments"]
+        read_only_fields = ['user','favorited_by','created_at', 'updated_at', 'liked_users', 'disliked_users']
         # liked_users and disliked users are not included. Just count of them is included. Further it can be change.
         
     def create(self, validated_data):
