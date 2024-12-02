@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,6 +31,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'users',
     'questions',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -40,6 +42,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173',  # React uygulamasının çalıştığı port
 ]
 
 ROOT_URLCONF = 'DjangoCoreAPI.urls'
@@ -71,17 +78,10 @@ DATABASES = {
         "NAME": "solinher",
         "USER": "postgres",
         "PASSWORD": "123456",
-        "HOST": "127.0.0.1", #localhost
+        "HOST": "127.0.0.1",
         "PORT": "5432",
     }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
 
 # Password validation
@@ -108,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Europe/Istanbul'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -140,8 +140,6 @@ REST_FRAMEWORK = {
 
 
 # SimpleJWT settings (optional)
-from datetime import timedelta
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=10), # hours=3,minutes=30
     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
