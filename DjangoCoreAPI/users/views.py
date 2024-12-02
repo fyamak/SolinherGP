@@ -116,6 +116,6 @@ class GetUserByIdView(APIView):
     permission_classes = [AllowAny]
     
     def get(self, request, pk):
-        user = CustomUser.objects.get(pk=pk)
+        user = get_object_or_404(CustomUser, pk=pk)
         serializer = CustomUserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)

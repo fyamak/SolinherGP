@@ -52,7 +52,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 class UpdateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ('email', 'first_name', 'last_name', 'role', 'profile_picture', 'receive_email_notifications')
+        fields = ('first_name', 'last_name', 'role', 'profile_picture', 'receive_email_notifications') # email field is removed maybe it can be added later
         
 
 class ChangePasswordSerializer(serializers.Serializer):
