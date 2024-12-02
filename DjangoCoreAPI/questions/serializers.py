@@ -40,11 +40,24 @@ class QuestionSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         tags = validated_data.pop("tags", [])  # Extract tags into list
         question = Question.objects.create(**validated_data)
-
         for tag_name in set(tags):  # Same tag filter
             tag, created = Tag.objects.get_or_create(name=tag_name)
             question.tags.add(tag)
         return question
+    
+    def update(self, instance, validated_data):
+        tags = validated_data.pop('tags', None)
+        # Update other fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        
+        if tags is not None:
+            instance.tags.clear() # Clear existing tags
+            for tag_name in set(tags):
+                tag, created = Tag.objects.get_or_create(name=tag_name)
+                instance.tags.add(tag)
+        instance.save()
+        return instance
     
     def get_tag_names(self, obj):
         return [tag.name for tag in obj.tags.all()]
