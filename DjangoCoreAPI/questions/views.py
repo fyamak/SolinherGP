@@ -2,11 +2,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
-from rest_framework.generics import get_object_or_404
+from rest_framework.generics import get_object_or_404, ListAPIView
+from rest_framework import filters
 from questions.models import Question, Comment
 from questions.serializers import QuestionSerializer, CommentSerializer
 from drf_yasg.utils import swagger_auto_schema
-
 
 class AllQuestions(APIView):
     permission_classes = [AllowAny]
@@ -63,6 +63,18 @@ class OwnQuestions(APIView):
         own_questions = Question.objects.filter(user=request.user)
         serializer = QuestionSerializer(own_questions, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# https://www.django-rest-framework.org/api-guide/filtering/#searchfilter
+# http://127.0.0.1:8000/api/questions/search/?search=anystring
+class Search(ListAPIView):
+    permission_classes = [AllowAny]
+    
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+    filter_backends = [filters.SearchFilter] # Contains search (Default)
+    search_fields = ['user__first_name','user__last_name','title', 'body','tags__name'] # ManyToManyField with the lookup API double-underscore notation
+    # search_fields = ['user','title', 'body','tags__name'] # ManyToManyField with the lookup API double-underscore notation
 
 
 class EditQuestion(APIView):
