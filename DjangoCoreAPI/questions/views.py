@@ -7,6 +7,8 @@ from rest_framework import filters
 from questions.models import Question, Comment
 from questions.serializers import QuestionSerializer, CommentSerializer
 from drf_yasg.utils import swagger_auto_schema
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 class AllQuestions(APIView):
     permission_classes = [AllowAny]
@@ -66,15 +68,19 @@ class OwnQuestions(APIView):
 
 
 # https://www.django-rest-framework.org/api-guide/filtering/#searchfilter
-# http://127.0.0.1:8000/api/questions/search/?search=anystring
+# https://www.django-rest-framework.org/api-guide/filtering/#djangofilterbackend
+# optionally order filter can be added
+# optionally flexible search for spelling can be added 
 class Search(ListAPIView):
     permission_classes = [AllowAny]
     
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
-    filter_backends = [filters.SearchFilter] # Contains search (Default)
-    search_fields = ['user__first_name','user__last_name','title', 'body','tags__name'] # ManyToManyField with the lookup API double-underscore notation
-    # search_fields = ['user','title', 'body','tags__name'] # ManyToManyField with the lookup API double-underscore notation
+    filter_backends = [filters.SearchFilter, DjangoFilterBackend] # Contains search (Default)
+    # ManyToManyField with the lookup API double-underscore notation
+    search_fields = ['user__first_name','user__last_name','title', 'body'] # /?search=anystring
+    filterset_fields = ['tags__name'] # /?tags__name=tagstring
+    
 
 
 class EditQuestion(APIView):
