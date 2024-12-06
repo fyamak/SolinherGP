@@ -22,7 +22,7 @@ class CustomUser(AbstractUser):
 
     email = models.EmailField(_("email address"), unique=True)
     role = models.CharField(max_length=15, choices=ROLE_CHOICES, default='user')
-    profile_picture = models.ImageField(upload_to="temp/", blank=True, null=True) 
+    profile_picture = models.ImageField(blank=True, null=True, upload_to="temp/") 
     is_account_verified = models.BooleanField(default=False)
     questions_asked = models.IntegerField(default=0)  
     answers_given = models.IntegerField(default=0)

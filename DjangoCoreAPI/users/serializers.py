@@ -20,11 +20,11 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = CustomUser.objects.create(
             email=validated_data['email'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
-            role=validated_data['role'],
-            profile_picture=validated_data['profile_picture'],
-            receive_email_notifications=validated_data['receive_email_notifications'],
+            first_name=validated_data.get('first_name', ''),
+            last_name=validated_data.get('last_name', ''),
+            role=validated_data.get('role', CustomUser._meta.get_field('role').default),
+            profile_picture=validated_data.get('profile_picture', None),
+            receive_email_notifications=validated_data.get('receive_email_notifications', CustomUser._meta.get_field('receive_email_notifications').default),
         )
         user.set_password(validated_data['password'])
         user.save()
