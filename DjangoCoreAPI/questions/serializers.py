@@ -28,7 +28,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     like_count = serializers.SerializerMethodField()
     dislike_count = serializers.SerializerMethodField()
     comments = CommentSerializer(many=True, read_only=True)  # Nested serializer for comments
-    tags = serializers.ListField(child=serializers.CharField(max_length=50), write_only=True) # Every tag should be string, Write will only be used while POST request
+    tags = serializers.ListField(child=serializers.CharField(max_length=50), write_only=True, required=False) # Every tag should be string, Write will only be used while POST request
     tag_names = serializers.SerializerMethodField() # For GET request
     
     class Meta:

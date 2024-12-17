@@ -43,7 +43,7 @@ class CreateComment(APIView):
     @swagger_auto_schema(
         request_body=CommentSerializer,
         responses={
-            200: "Comment successfully created",
+            201: "Comment successfully created",
             400: "Comment not created",
         }
     )

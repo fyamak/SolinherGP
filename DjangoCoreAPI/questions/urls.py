@@ -6,7 +6,6 @@ from questions.views import (
     FavoriteQuestion,
 )
 
-# try these urls - they have never been tried 
 urlpatterns = [
     path("all-questions/", AllQuestions.as_view(), name="all_question"),
     path("create-question/",CreateQuestion.as_view(),name="create_question"),
