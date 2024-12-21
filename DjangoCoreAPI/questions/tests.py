@@ -4,8 +4,12 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from .models import Question,Comment,Tag
+import time
+import random
 
 CustomUser = get_user_model()
+question_number = 100
+tag_number = 10
 
 # Create your tests here.
 class UserAPITestCase(TestCase):
@@ -259,3 +263,88 @@ class UserAPITestCase(TestCase):
         response_question = self.client.get(reverse("question", kwargs={"pk":self.question.id}))
         self.assertEqual(response.status_code, status.HTTP_200_OK, 'Expected status code not returned')
         self.assertIn(self.user.id, response_question.data["favorited_by"], "User's favorite is not found in question")
+        
+
+class APIPerformanceTestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = CustomUser.objects.create_user(
+            email="testuser@example.com", 
+            password="Password123!",
+            first_name="Test",
+            last_name="User",
+            role="employee"
+        )
+        
+        self.questions = []
+        self.tags = [Tag.objects.create(name=f"tag{i}") for i in range(tag_number)]
+        
+        for i in range(question_number): 
+            question = Question.objects.create(
+                title=f"Test Question {i}",
+                body=f"Test body content {i}",
+                user=self.user
+            )
+            question.tags.add(self.tags[random.randint(0,tag_number-1)], self.tags[random.randint(0,tag_number-1)])
+            self.questions.append(question)
+        print("# Time Measurement #")
+
+
+    def measure_response_time(self, url, method="get", data=None, expected_status=status.HTTP_200_OK):
+        start_time = time.time()
+        
+        if method == "get":
+            response = self.client.get(url)
+        elif method == "post":
+            response = self.client.post(url, data)
+        
+        end_time = time.time()
+        response_time = end_time - start_time
+        self.assertEqual(response.status_code, expected_status, f"url -> {url}, {response.data}")
+        return response_time
+
+
+
+    def test_performance(self):
+        self.client.force_authenticate(user=self.user)
+        
+        # Searching measurement
+        url = reverse("search")
+        search_terms = ["question", "body", "user", "invalid"] # different search terms
+
+        for term in search_terms:
+            response_time = self.measure_response_time(f"{url}?search={term}")
+            print(f"Filtering '{term}' in {question_number} questions & {tag_number} tags : {response_time:.5f} second")
+
+        
+        # Listing all question measurement
+        url = reverse("all_question")
+        response_time = self.measure_response_time(url)
+        print(f"Listing all question in {question_number} questions & {tag_number} tags : {response_time:.5f} second")
+ 
+
+        # Creating question measurement
+        url = reverse("create_question")
+        question_data = {
+            "title": f"Performance test title",
+            "body": f"Performance test body",
+            "tags": ["performance", "test"]
+        }
+        response_time = self.measure_response_time(url, method="post", data=question_data, expected_status=status.HTTP_201_CREATED)
+        print(f"Creating a question : {response_time:.5f} second")
+        
+
+        # Creating comment measurement
+        url = reverse("create_comment")
+        comment_data = {
+            "question" : self.questions[0].id,
+            "body": f"Performance test body",
+        }
+        response_time = self.measure_response_time(url, method="post", data=comment_data, expected_status=status.HTTP_201_CREATED)
+        print(f"Creating a comment : {response_time:.5f} second")
+        
+        
+        # Listing favorite questions
+        url = reverse("favorite_question", kwargs={"pk":self.questions[0].id})
+        response_time = self.measure_response_time(url, method="post")
+        print(f"Listing favorites : {response_time:.5f} second")        
