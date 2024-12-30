@@ -145,6 +145,13 @@ class RAGManager:
             
             genai.configure(api_key=api_key)
             model = genai.GenerativeModel("gemini-1.5-flash")
+            # model_config = {
+            #      "temperature": 0.1,
+            #      "top_p": 0.99,  
+            #      "top_k": 0,
+            #      "max_output_tokens": 4096,
+            # }
+            # response = model.generate_content(final_prompt,generation_config=model_config)
             response = model.generate_content(final_prompt)
             return response.text
             
@@ -164,7 +171,12 @@ class RAGManager:
                 return "No relevant information found in the knowledge base."
                 
             context = "\n".join([result.page_content for result in results])
-            final_prompt = f"Query: {query}\n\nContext:\n{context}\n\nAnswer:"
+            final_prompt = f"""Answer the question with the given context.
+                            If the information is not available in the context, just return "not available in the context".
+                            Question: {query}
+                            Context: {context}
+                            Answer:
+                            """
             
             return self.send_query_to_gemini(final_prompt)
             
