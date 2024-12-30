@@ -22,15 +22,16 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/auth/', include('users.urls')),  # Include your app's urls here
-    path('api/questions/', include('questions.urls')),
-    
-    # SimpleJWT Token URLs
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+   path('admin/', admin.site.urls),
+   path('api/auth/', include('users.urls')),  # Include your app's urls here
+   path('api/questions/', include('questions.urls')),
+   path("api/ai/", include("ai.urls")),
+   
+   # SimpleJWT Token URLs
+   path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+   path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
-    # Swagger URLs
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+   # Swagger URLs
+   path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+   path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
