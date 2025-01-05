@@ -65,7 +65,19 @@ class OwnQuestions(APIView):
         own_questions = Question.objects.filter(user=request.user)
         serializer = QuestionSerializer(own_questions, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
+    
+    
+class FavoritedQuestions(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    @swagger_auto_schema(
+        responses={200: QuestionSerializer()}
+    )
+    def get(self,request):
+        favorited_questions = Question.objects.filter(favorited_by=request.user)
+        serializer = QuestionSerializer(favorited_questions, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
 
 # https://www.django-rest-framework.org/api-guide/filtering/#searchfilter
 # https://www.django-rest-framework.org/api-guide/filtering/#djangofilterbackend
