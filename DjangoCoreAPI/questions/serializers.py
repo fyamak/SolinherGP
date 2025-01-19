@@ -67,3 +67,9 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     def get_dislike_count(self, obj):
         return obj.dislike_count()
+    
+    
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = "__all__"

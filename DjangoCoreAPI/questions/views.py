@@ -4,8 +4,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
 from rest_framework.generics import get_object_or_404, ListAPIView
 from rest_framework import filters
-from questions.models import Question, Comment
-from questions.serializers import QuestionSerializer, CommentSerializer
+from questions.models import Question, Comment, Tag
+from questions.serializers import QuestionSerializer, CommentSerializer, TagSerializer
 from drf_yasg.utils import swagger_auto_schema
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -19,6 +19,15 @@ class AllQuestions(APIView):
     def get(self, request):
         questions = Question.objects.all()
         serializer = QuestionSerializer(questions, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class AllTags(APIView):
+    permission_classes = [AllowAny]
+    
+    def get(self, request):
+        tags = Tag.objects.all()
+        serializer = TagSerializer(tags, many=True)
+        # serializer = QuestionSerializer(questions, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     

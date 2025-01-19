@@ -1,6 +1,6 @@
 from django.urls import path
 from questions.views import (
-    AllQuestions, CreateQuestion, CreateComment, OwnQuestions, FavoritedQuestions, Search,
+    AllQuestions, AllTags, CreateQuestion, CreateComment, OwnQuestions, FavoritedQuestions, Search,
     EditQuestion,EditComment, QuestionByID,
     LikeQuestion, DislikeQuestion, LikeComment, DislikeComment,
     FavoriteQuestion,
@@ -8,6 +8,7 @@ from questions.views import (
 
 urlpatterns = [
     path("all-questions/", AllQuestions.as_view(), name="all_question"),
+    path("all-tags/", AllTags.as_view(), name="all_tags"),
     path("create-question/",CreateQuestion.as_view(),name="create_question"),
     path("create-comment/",CreateComment.as_view(),name="create_comment"),
     path("own-questions/",OwnQuestions.as_view(),name="own_questions"),
